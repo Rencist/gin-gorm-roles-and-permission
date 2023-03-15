@@ -13,8 +13,10 @@ type User struct {
 	Email 		string 		`json:"email" binding:"email"`
 	NoTelp 		string 		`json:"no_telp"`
 	Password 	string  	`json:"password"`
-	Role		string		`json:"role"`
 	
+	RoleID   	int64 		`gorm:"foreignKey" json:"role_id"`
+	Role     	*Role  		`gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"role,omitempty"`
+
 	Timestamp
 }
 

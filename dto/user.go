@@ -10,6 +10,8 @@ type UserCreateDto struct {
 	Email 		string 		`json:"email" form:"email" binding:"required"`
 	NoTelp 		string 		`json:"no_telp" form:"no_telp" binding:"required"`
 	Password 	string  	`json:"password" form:"password" binding:"required"`
+
+	RoleID      int64 		`gorm:"foreignKey" json:"role_id" form:"role_id"`
 }
 
 type UserUpdateDto struct {
