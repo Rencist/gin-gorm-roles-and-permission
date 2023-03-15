@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"gin-gorm-clean-template/common"
 	"gin-gorm-clean-template/dto"
 	"gin-gorm-clean-template/entity"
@@ -22,11 +23,13 @@ type UserController interface {
 type userController struct {
 	jwtService service.JWTService
 	userService service.UserService
+	roleService service.RoleService
 }
 
-func NewUserController(us service.UserService, jwts service.JWTService) UserController {
+func NewUserController(us service.UserService, rs service.RoleService, jwts service.JWTService) UserController {
 	return &userController{
 		userService: us,
+		roleService: rs,
 		jwtService: jwts,
 	}
 }
@@ -34,6 +37,12 @@ func NewUserController(us service.UserService, jwts service.JWTService) UserCont
 func(uc *userController) RegisterUser(ctx *gin.Context) {
 	var user dto.UserCreateDto
 	err := ctx.ShouldBind(&user)
+	fmt.Println(user)
+	if err != nil {
+		res := common.BuildErrorResponse("Gagal Menambahkan User", err.Error(), common.EmptyObj{})
+		ctx.JSON(http.StatusBadRequest, res)
+		return
+	}
 	checkUser, _ := uc.userService.CheckUser(ctx.Request.Context(), user.Email)
 	if checkUser {
 		res := common.BuildErrorResponse("User Sudah Terdaftar", "false", common.EmptyObj{})
@@ -79,10 +88,11 @@ func(uc *userController) LoginUser(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, response)
 		return
 	}
-	token := uc.jwtService.GenerateToken(user.ID, user.Role)
+	role, err := uc.roleService.FindRoleByID(ctx, user.RoleID)
+	token := uc.jwtService.GenerateToken(user.ID, role.Name)
 	userResponse := entity.Authorization{
 		Token: token,
-		Role: user.Role,
+		Role: role.Name,
 	}
 	
 	response := common.BuildResponse(true, "Berhasil Login", userResponse)

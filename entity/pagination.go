@@ -1,11 +1,11 @@
 package entity
 
 type Pagination struct {
-	PerPage     int   `json:"per_page"`
-	Page        int   `json:"page"`
-	MaxPage     int   `json:"max_page"`
-	TotalData   int64 `json:"total_data"`
-	DataPerPage any   `json:"data_per_page"`
+	PerPage     int    `json:"per_page"`
+	Page        int    `json:"page"`
+	MaxPage     int    `json:"max_page"`
+	TotalData   uint64 `json:"total_data"`
+	DataPerPage any    `json:"data_per_page"`
 }
 
 func (p *Pagination) GetOffset() int {

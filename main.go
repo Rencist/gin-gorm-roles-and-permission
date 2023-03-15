@@ -28,9 +28,12 @@ func main() {
 		
 		jwtService service.JWTService = service.NewJWTService()
 
+		roleRepository repository.RoleRepository = repository.NewRoleRepository(db)
+		roleService service.RoleService = service.NewRoleService(roleRepository)
+
 		userRepository repository.UserRepository = repository.NewUserRepository(db)
 		userService service.UserService = service.NewUserService(userRepository)
-		userController controller.UserController = controller.NewUserController(userService, jwtService)
+		userController controller.UserController = controller.NewUserController(userService, roleService, jwtService)
 	)
 
 	server := gin.Default()

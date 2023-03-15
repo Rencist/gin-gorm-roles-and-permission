@@ -35,7 +35,6 @@ func NewUserService(ur repository.UserRepository) UserService {
 func(us *userService) RegisterUser(ctx context.Context, userDTO dto.UserCreateDto) (entity.User, error) {
 	user := entity.User{}
 	err := smapping.FillStruct(&user, smapping.MapFields(userDTO))
-	user.RoleID = 2
 	if err != nil {
 		return user, err
 	}
