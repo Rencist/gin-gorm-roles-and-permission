@@ -3,7 +3,7 @@ package entity
 import "github.com/google/uuid"
 
 type RoleHasPermission struct {
-	ID   			uint64  		`gorm:"primary_key;not_null" json:"id"`
+	ID   			uint64  	`gorm:"primary_key;not_null" json:"id"`
 	Name 			string 		`json:"name"`
 
 	RoleID 			uuid.UUID 	`gorm:"foreignKey" json:"role_id"`

@@ -45,3 +45,7 @@ func Authenticate(jwtService service.JWTService) gin.HandlerFunc {
 		ctx.Next()
 	}
 }
+
+func PermissionMiddleware() {
+	
+}
