@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"gin-gorm-clean-template/common"
 	"gin-gorm-clean-template/service"
 	"net/http"
@@ -10,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Authenticate(jwtService service.JWTService, userService service.UserService, roleHasPermissionService service.RoleHasPermissionService, permission string) gin.HandlerFunc {
+func Authenticate(jwtService service.JWTService, userService service.UserService, roleHasPermissionService service.RoleHasPermissionService, permissionService service.PermissionService, permissionRoutes string) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		authHeader := ctx.GetHeader("Authorization")
 		if authHeader == "" {
@@ -53,13 +52,22 @@ func Authenticate(jwtService service.JWTService, userService service.UserService
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, response)
 			return
 		}
-		fmt.Println(roleHasPermission)
 		for _, v := range roleHasPermission {
-			fmt.Println(v)
+			permission, err := permissionService.FindByPermissionID(ctx, v.PermissionID)
+			if err != nil {
+				response := common.BuildErrorResponse("Gagal Memproses Request", err.Error(), nil)
+				ctx.AbortWithStatusJSON(http.StatusUnauthorized, response)
+				return
+			}
+			if permission.Routes == permissionRoutes {
+				ctx.Set("token", authHeader)
+				ctx.Set("userID", userID)
+				ctx.Next()	
+			}
 		}
-
-		ctx.Set("token", authHeader)
-		ctx.Set("userID", userID)
-		ctx.Next()
+		response := common.BuildErrorResponse("User Tidak Memiliki Akses ke Endpoint Ini", "Unauthorized", nil)
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, response)
+		return
+		
 	}
 }

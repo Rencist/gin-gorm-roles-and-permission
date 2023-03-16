@@ -31,6 +31,9 @@ func main() {
 		roleRepository repository.RoleRepository = repository.NewRoleRepository(db)
 		roleService service.RoleService = service.NewRoleService(roleRepository)
 
+		permissionRepository repository.PermissionRepository = repository.NewPermissionRepository(db)
+		permissionService service.PermissionService = service.NewPermissionService(permissionRepository)
+
 		roleHasPermissionRepository repository.RoleHasPermissionRepository = repository.NewRoleHasPermissionRepository(db)
 		roleHasPermissionService service.RoleHasPermissionService = service.NewRoleHasPermissionService(roleHasPermissionRepository)
 
@@ -40,7 +43,7 @@ func main() {
 	)
 
 	server := gin.Default()
-	routes.UserRoutes(server, userController, jwtService, userService, roleHasPermissionService)
+	routes.UserRoutes(server, userController, jwtService, userService, roleHasPermissionService, permissionService)
 
 	port := os.Getenv("PORT")
 	if port == "" {
