@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"gin-gorm-clean-template/common"
 	"gin-gorm-clean-template/dto"
 	"gin-gorm-clean-template/entity"
@@ -37,7 +36,6 @@ func NewUserController(us service.UserService, rs service.RoleService, jwts serv
 func(uc *userController) RegisterUser(ctx *gin.Context) {
 	var user dto.UserCreateDto
 	err := ctx.ShouldBind(&user)
-	fmt.Println(user)
 	if err != nil {
 		res := common.BuildErrorResponse("Gagal Menambahkan User", err.Error(), common.EmptyObj{})
 		ctx.JSON(http.StatusBadRequest, res)

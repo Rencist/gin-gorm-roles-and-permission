@@ -8,7 +8,7 @@ import (
 )
 
 type RoleHasPermissionRepository interface {
-	FindRoleHasPermissionByRoleID(ctx context.Context, roleID uint64) (entity.RoleHasPermission, error)
+	FindRoleHasPermissionByRoleID(ctx context.Context, roleID uint64) ([]entity.RoleHasPermission, error)
 }
 
 type roleHasPermissionConnection struct {
@@ -21,9 +21,9 @@ func NewRoleHasPermissionRepository(db *gorm.DB) RoleHasPermissionRepository {
 	}
 }
 
-func(db *roleHasPermissionConnection) FindRoleHasPermissionByRoleID(ctx context.Context, roleID uint64) (entity.RoleHasPermission, error){
-	var roleHasPermission entity.RoleHasPermission
-	rx := db.connection.Where("role_id = ?").Find(&roleHasPermission)
+func(db *roleHasPermissionConnection) FindRoleHasPermissionByRoleID(ctx context.Context, roleID uint64) ([]entity.RoleHasPermission, error){
+	var roleHasPermission []entity.RoleHasPermission
+	rx := db.connection.Where("role_id = ?", roleID).Find(&roleHasPermission)
 	if rx.Error != nil {
 		return roleHasPermission, rx.Error
 	}

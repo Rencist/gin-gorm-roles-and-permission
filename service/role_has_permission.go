@@ -7,7 +7,7 @@ import (
 )
 
 type RoleHasPermissionService interface {
-	FindRoleHasPermissionByRoleID(ctx context.Context, roleID uint64) (entity.RoleHasPermission, error)
+	FindRoleHasPermissionByRoleID(ctx context.Context, roleID uint64) ([]entity.RoleHasPermission, error)
 }
 
 type roleHasPermissionService struct {
@@ -20,6 +20,6 @@ func NewRoleHasPermissionService(rr repository.RoleHasPermissionRepository) Role
 	}
 }
 
-func(rs *roleHasPermissionService) FindRoleHasPermissionByRoleID(ctx context.Context, roleID uint64) (entity.RoleHasPermission, error) {
+func(rs *roleHasPermissionService) FindRoleHasPermissionByRoleID(ctx context.Context, roleID uint64) ([]entity.RoleHasPermission, error) {
 	return rs.roleHasPermissionRepository.FindRoleHasPermissionByRoleID(ctx, roleID)
 }

@@ -8,14 +8,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func UserRoutes(router *gin.Engine, UserController controller.UserController, jwtService service.JWTService) {
+func UserRoutes(router *gin.Engine, UserController controller.UserController, jwtService service.JWTService, userService service.UserService, roleHasPermissionService service.RoleHasPermissionService) {
 	userRoutes := router.Group("/api/user")
 	{
 		userRoutes.POST("", UserController.RegisterUser)
-		userRoutes.GET("", middleware.Authenticate(jwtService), UserController.GetAllUser)
+		userRoutes.GET("", middleware.Authenticate(jwtService, userService, roleHasPermissionService, "user.index"), UserController.GetAllUser)
 		userRoutes.POST("/login", UserController.LoginUser)
-		userRoutes.DELETE("/", middleware.Authenticate(jwtService), UserController.DeleteUser)
-		userRoutes.PUT("/", middleware.Authenticate(jwtService), UserController.UpdateUser)
-		userRoutes.GET("/me", middleware.Authenticate(jwtService), UserController.MeUser)
+		userRoutes.DELETE("/", middleware.Authenticate(jwtService, userService, roleHasPermissionService, "user.delete"), UserController.DeleteUser)
+		userRoutes.PUT("/", middleware.Authenticate(jwtService, userService, roleHasPermissionService, "user.update"), UserController.UpdateUser)
+		userRoutes.GET("/me", middleware.Authenticate(jwtService, userService, roleHasPermissionService, "user_me.index"), UserController.MeUser)
 	}
 }

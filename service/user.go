@@ -15,6 +15,7 @@ type UserService interface {
 	RegisterUser(ctx context.Context, userDTO dto.UserCreateDto) (entity.User, error)
 	GetAllUser(ctx context.Context) ([]entity.User, error)
 	FindUserByEmail(ctx context.Context, email string) (entity.User, error)
+	FindUserByID(ctx context.Context, userID uuid.UUID) (entity.User, error)
 	Verify(ctx context.Context, email string, password string) (bool, error)
 	CheckUser(ctx context.Context, email string) ( bool, error)
 	DeleteUser(ctx context.Context, userID uuid.UUID) (error)
@@ -47,6 +48,10 @@ func(us *userService) GetAllUser(ctx context.Context) ([]entity.User, error) {
 
 func(us *userService) FindUserByEmail(ctx context.Context, email string) (entity.User, error) {
 	return us.userRepository.FindUserByEmail(ctx, email)
+}
+
+func(us *userService) FindUserByID(ctx context.Context, userID uuid.UUID) (entity.User, error) {
+	return us.userRepository.FindUserByID(ctx, userID)
 }
 
 func(us *userService) Verify(ctx context.Context, email string, password string) (bool, error) {
