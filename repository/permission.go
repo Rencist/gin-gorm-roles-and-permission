@@ -9,6 +9,9 @@ import (
 
 type PermissionRepository interface {
 	FindByPermissionID(ctx context.Context, permissionID uint64) (entity.Permission, error)
+	GetAllPermission(ctx context.Context) ([]entity.Permission, error)
+	CreatePermission(ctx context.Context, permission entity.Permission) (entity.Permission, error)
+	UpdatePermission(ctx context.Context, permission entity.Permission) (error)
 }
 
 type permissionConnection struct {
@@ -28,4 +31,29 @@ func(db *permissionConnection) FindByPermissionID(ctx context.Context, permissio
 		return permission, px.Error
 	}
 	return permission, nil
+}
+
+func(db *permissionConnection) GetAllPermission(ctx context.Context) ([]entity.Permission, error) {
+	var permissionList []entity.Permission
+	px := db.connection.Find(&permissionList)
+	if px.Error != nil {
+		return permissionList, px.Error
+	}
+	return permissionList, nil
+}
+
+func(db *permissionConnection) CreatePermission(ctx context.Context, permission entity.Permission) (entity.Permission, error) {
+	px := db.connection.Create(&permission)
+	if px.Error != nil {
+		return permission, px.Error
+	}
+	return permission, nil
+}
+
+func(db *permissionConnection) UpdatePermission(ctx context.Context, permission entity.Permission) (error) {
+	px := db.connection.Updates(&permission)
+	if px.Error != nil {
+		return px.Error
+	}
+	return nil
 }

@@ -9,6 +9,9 @@ import (
 
 type RoleRepository interface {
 	FindRoleByID(ctx context.Context, roleID uint64) (entity.Role, error)
+	GetAllROle(ctx context.Context) ([]entity.Role, error)
+	CreateRole(ctx context.Context, role entity.Role) (entity.Role, error)
+	UpdateRole(ctx context.Context, role entity.User) (error)
 }
 
 type roleConnection struct {
@@ -28,4 +31,29 @@ func(db *roleConnection) FindRoleByID(ctx context.Context, roleID uint64) (entit
 		return role, rx.Error
 	}
 	return role, nil
+}
+
+func(db *roleConnection) GetAllROle(ctx context.Context) ([]entity.Role, error) {
+	var roleList []entity.Role
+	rx := db.connection.Find(&roleList)
+	if rx.Error != nil {
+		return roleList, rx.Error
+	}
+	return roleList, nil
+}
+
+func(db *roleConnection) CreateRole(ctx context.Context, role entity.Role) (entity.Role, error) {
+	rx := db.connection.Create(&role)
+	if rx.Error != nil {
+		return entity.Role{}, rx.Error
+	}
+	return role, nil
+}
+
+func(db *roleConnection) UpdateRole(ctx context.Context, role entity.User) (error) {
+	rx := db.connection.Updates(&role)
+	if rx.Error != nil {
+		return rx.Error
+	}
+	return nil
 }
